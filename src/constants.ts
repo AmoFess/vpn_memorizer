@@ -36,9 +36,10 @@ export const VPN_SYSTEMS = [
   "3x-ui pro",
   "Amnezia",
   "Wireguard",
+  "Другое",
 ];
 
-export const LOGIN_METHODS = ["Google", "ВКонтакте", "Телеграм"];
+export const LOGIN_METHODS = ["Google", "ВКонтакте", "Телеграм", "Логин пароль"];
 
 export const PAYMENT_PERIODS = [
   "ежемесячно",
