@@ -4,6 +4,7 @@ export interface VpnLocation {
   host_name: string;
   login_url: string;
   login: string;
+  host_password: string;
   login_method: string;
   vpn_system: string;
   country_name: string;

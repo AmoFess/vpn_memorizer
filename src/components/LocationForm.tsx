@@ -22,6 +22,7 @@ interface FormState {
   host_name: string;
   login_url: string;
   login: string;
+  host_password: string;
   login_method: string;
   vpn_system: string;
   country_name: string;
@@ -39,6 +40,7 @@ const EMPTY: FormState = {
   host_name: "",
   login_url: "",
   login: "",
+  host_password: "",
   login_method: "",
   vpn_system: "",
   country_name: "",
@@ -57,6 +59,7 @@ function fromLocation(l: VpnLocation): FormState {
     host_name: l.host_name,
     login_url: l.login_url,
     login: l.login,
+    host_password: l.host_password || "",
     login_method: l.login_method,
     vpn_system: l.vpn_system,
     country_name: l.country_name,
@@ -135,6 +138,7 @@ function Section({ num, title }: { num: string; title: string }) {
 export default function LocationForm({ initial, onSave, onClose }: Props) {
   const [state, setState] = useState<FormState>(initial ? fromLocation(initial) : EMPTY);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
+  const [showHostPw, setShowHostPw] = useState(false);
   const [showPw, setShowPw] = useState(false);
 
   useEffect(() => {
@@ -164,6 +168,7 @@ export default function LocationForm({ initial, onSave, onClose }: Props) {
         host_name: state.host_name.trim(),
         login_url: state.login_url.trim(),
         login: state.login.trim(),
+        host_password: state.host_password,
         login_method: state.login_method,
         vpn_system: state.vpn_system,
         country_name: state.country_name,
@@ -232,6 +237,25 @@ export default function LocationForm({ initial, onSave, onClose }: Props) {
               </Field>
               <Field label="Логин">
                 <input className="input" value={state.login} onChange={set("login")} placeholder="email или имя пользователя" />
+              </Field>
+              <Field label="Пароль хостера">
+                <div className="relative">
+                  <input
+                    type={showHostPw ? "text" : "password"}
+                    className="input pr-10"
+                    value={state.host_password}
+                    onChange={set("host_password")}
+                    autoComplete="new-password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowHostPw((v) => !v)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-mist-600 transition-colors hover:text-sea-300"
+                    title={showHostPw ? "Скрыть пароль" : "Показать пароль"}
+                  >
+                    {showHostPw ? <IconEyeOff className="h-4 w-4" /> : <IconEye className="h-4 w-4" />}
+                  </button>
+                </div>
               </Field>
               <Field label="Способ логина в хостере">
                 <select className="input" value={state.login_method} onChange={set("login_method")}>
