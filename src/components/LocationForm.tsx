@@ -333,8 +333,8 @@ export default function LocationForm({ initial, onSave, onClose }: Props) {
             </div>
 
             <Section num="03" title="Оплата" />
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-              <Field label="Периодичность" className="col-span-2 md:col-span-1">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <Field label="Периодичность" error={errors.payment_period}>
                 <select className="input" value={state.payment_period} onChange={set("payment_period")}>
                   <option value="">— не указана —</option>
                   {PAYMENT_PERIODS.map((p) => (
