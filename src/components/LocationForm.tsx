@@ -23,6 +23,7 @@ interface FormState {
   login_url: string;
   login: string;
   login_method: string;
+  login_password: string;
   vpn_system: string;
   country_name: string;
   domain: string;
@@ -40,6 +41,7 @@ const EMPTY: FormState = {
   login_url: "",
   login: "",
   login_method: "",
+  login_password: "",
   vpn_system: "",
   country_name: "",
   domain: "",
@@ -58,6 +60,7 @@ function fromLocation(l: VpnLocation): FormState {
     login_url: l.login_url,
     login: l.login,
     login_method: l.login_method,
+    login_password: "",
     vpn_system: l.vpn_system,
     country_name: l.country_name,
     domain: l.domain,
@@ -165,6 +168,7 @@ export default function LocationForm({ initial, onSave, onClose }: Props) {
         login_url: state.login_url.trim(),
         login: state.login.trim(),
         login_method: state.login_method,
+        login_password: state.login_password,
         vpn_system: state.vpn_system,
         country_name: state.country_name,
         country_flag: countryFlag(state.country_name),
@@ -232,6 +236,26 @@ export default function LocationForm({ initial, onSave, onClose }: Props) {
               </Field>
               <Field label="Логин">
                 <input className="input" value={state.login} onChange={set("login")} placeholder="email или имя пользователя" />
+              </Field>
+              <Field label="Пароль">
+                <div className="relative">
+                  <input
+                    type={showPw ? "text" : "password"}
+                    className="input pr-10"
+                    value={state.login_password}
+                    onChange={set("login_password")}
+                    autoComplete="new-password"
+                    placeholder="пароль от хостера"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPw((v) => !v)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-mist-600 transition-colors hover:text-sea-300"
+                    title={showPw ? "Скрыть пароль" : "Показать пароль"}
+                  >
+                    {showPw ? <IconEyeOff className="h-4 w-4" /> : <IconEye className="h-4 w-4" />}
+                  </button>
+                </div>
               </Field>
               <Field label="Способ логина в хостере">
                 <select className="input" value={state.login_method} onChange={set("login_method")}>
@@ -309,8 +333,8 @@ export default function LocationForm({ initial, onSave, onClose }: Props) {
             </div>
 
             <Section num="03" title="Оплата" />
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-              <Field label="Периодичность" className="col-span-2 md:col-span-1">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <Field label="Периодичность" error={errors.payment_period}>
                 <select className="input" value={state.payment_period} onChange={set("payment_period")}>
                   <option value="">— не указана —</option>
                   {PAYMENT_PERIODS.map((p) => (

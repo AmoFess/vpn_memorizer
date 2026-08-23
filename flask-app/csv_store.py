@@ -24,6 +24,7 @@ CSV_HEADERS = [
     "login",
     "login_password",
     "login_method",
+    "login_password",
     "vpn_system",
     "country_name",
     "country_flag",

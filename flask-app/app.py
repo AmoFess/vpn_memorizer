@@ -135,6 +135,7 @@ def parse_form(form) -> dict:
         "login": s("login"),
         "login_password": s("login_password"),
         "login_method": s("login_method"),
+        "login_password": s("login_password"),
         "vpn_system": s("vpn_system"),
         "country_name": s("country_name"),
         "country_flag": "",  # вычисляется по стране при сохранении
@@ -249,7 +250,7 @@ def create():
         return redirect(url_for("index"))
 
     empty = {h: "" for h in
-             ["host_name", "login_url", "login", "login_method", "vpn_system",
+             ["host_name", "login_url", "login", "login_method", "login_password", "vpn_system",
               "country_name", "country_flag", "domain", "ip", "server_login",
               "server_password", "payment_period", "payment_cost",
               "payment_currency", "payment_day"]}
