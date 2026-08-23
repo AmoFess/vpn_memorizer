@@ -133,6 +133,7 @@ def parse_form(form) -> dict:
         "host_name": s("host_name"),
         "login_url": s("login_url"),
         "login": s("login"),
+        "login_password": s("login_password"),
         "login_method": s("login_method"),
         "login_password": s("login_password"),
         "vpn_system": s("vpn_system"),
