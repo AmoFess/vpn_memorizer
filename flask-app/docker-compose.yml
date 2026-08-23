@@ -1,0 +1,17 @@
+# Запуск:  docker compose up -d --build
+# Приложение будет доступно на http://localhost:5000
+services:
+  vpn-registry:
+    build: .
+    container_name: vpn-registry
+    restart: unless-stopped
+    ports:
+      # «хост:контейнер»; порт контейнера берётся из ENV PORT
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      # В production обязательно задайте свой ключ:
+      - SECRET_KEY=change-me-in-production
+    volumes:
+      # CSV-файл живёт на хосте и сохраняется между перезапусками
+      - ./data:/app/data

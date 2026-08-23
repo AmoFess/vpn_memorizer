@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} — VPN Реестр{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-10 col-xl-9">
+    <div class="d-flex align-items-center gap-3 mb-3">
+      <a href="{{ url_for('index') }}" class="btn btn-sm btn-outline-light">← К списку</a>
+      <h1 class="h4 mb-0">{{ title }}</h1>
+    </div>
+
+    <form method="post" action="{{ action }}" class="vpn-form card border-0 p-4">
+
+      {# ================= Хостер и доступ ================= #}
+      <div class="form-section">01 · Хостер и доступ</div>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Название хостера <span class="req">*</span></label>
+          <input type="text" name="host_name" class="form-control {{ 'is-invalid' if errors.host_name }}"
+                 value="{{ data.host_name }}" placeholder="Например: Aeza" required>
+          {% if errors.host_name %}<div class="invalid-feedback">{{ errors.host_name }}</div>{% endif %}
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Ссылка на страницу логина <span class="req">*</span></label>
+          <input type="text" name="login_url" class="form-control {{ 'is-invalid' if errors.login_url }}"
+                 value="{{ data.login_url }}" placeholder="https://example.com/login" required>
+          {% if errors.login_url %}<div class="invalid-feedback">{{ errors.login_url }}</div>{% endif %}
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Логин</label>
+          <input type="text" name="login" class="form-control"
+                 value="{{ data.login }}" placeholder="email или имя пользователя">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Способ логина в хостере</label>
+          <select name="login_method" class="form-select">
+            <option value="" {{ 'selected' if not data.login_method }}>— не выбран —</option>
+            {% for m in login_methods %}
+              <option value="{{ m }}" {{ 'selected' if data.login_method == m }}>{{ m }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      {# ================= VPN-сервер ================= #}
+      <div class="form-section">02 · VPN-сервер</div>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Система VPN <span class="req">*</span></label>
+          <select name="vpn_system" class="form-select {{ 'is-invalid' if errors.vpn_system }}" required>
+            <option value="" disabled {{ 'selected' if not data.vpn_system }}>— выберите систему —</option>
+            {% for s in vpn_systems %}
+              <option value="{{ s }}" {{ 'selected' if data.vpn_system == s }}>{{ s }}</option>
+            {% endfor %}
+          </select>
+          {% if errors.vpn_system %}<div class="invalid-feedback">{{ errors.vpn_system }}</div>{% endif %}
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Страна <span class="req">*</span></label>
+          <div class="input-group">
+            <select name="country_name" id="country-select"
+                    class="form-select {{ 'is-invalid' if errors.country_name }}" required>
+              <option value="" disabled {{ 'selected' if not data.country_name }}>— выберите страну —</option>
+              {% for ru, en, flag in countries %}
+                <option value="{{ ru }}" data-flag="{{ flag }}"
+                        {{ 'selected' if data.country_name == ru }}>{{ ru }} ({{ en }})</option>
+              {% endfor %}
+            </select>
+            <span class="input-group-text flag-preview" id="flag-preview"
+                  title="Флаг подставляется автоматически">{{ data.country_flag or '🏳️' }}</span>
+          </div>
+          {% if errors.country_name %}<div class="invalid-feedback d-block">{{ errors.country_name }}</div>{% endif %}
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Доменное имя VPN</label>
+          <input type="text" name="domain" class="form-control"
+                 value="{{ data.domain }}" placeholder="vpn.example.com">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">IP-адрес VPN</label>
+          <input type="text" name="ip" class="form-control"
+                 value="{{ data.ip }}" placeholder="203.0.113.10">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Логин на сервер</label>
+          <input type="text" name="server_login" class="form-control"
+                 value="{{ data.server_login }}" placeholder="root">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Пароль на сервер</label>
+          <div class="input-group">
+            <input type="password" name="server_password" id="server-password"
+                   class="form-control" value="{{ data.server_password }}" autocomplete="new-password">
+            <button type="button" class="btn btn-outline-secondary" id="toggle-password"
+                    title="Показать / скрыть пароль">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12Z"/>
+                <circle cx="12" cy="12" r="2.6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {# ================= Оплата ================= #}
+      <div class="form-section">03 · Оплата</div>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Периодичность оплаты</label>
+          <select name="payment_period" class="form-select">
+            <option value="" {{ 'selected' if not data.payment_period }}>— не указана —</option>
+            {% for p in payment_periods %}
+              <option value="{{ p }}" {{ 'selected' if data.payment_period == p }}>{{ p }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Стоимость периода</label>
+          <input type="number" step="0.01" min="0" name="payment_cost"
+                 class="form-control {{ 'is-invalid' if errors.payment_cost }}"
+                 value="{{ data.payment_cost }}" placeholder="0.00">
+          {% if errors.payment_cost %}<div class="invalid-feedback">{{ errors.payment_cost }}</div>{% endif %}
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">Валюта</label>
+          <select name="payment_currency" class="form-select">
+            <option value="" {{ 'selected' if not data.payment_currency }}>—</option>
+            {% for c in currencies %}
+              <option value="{{ c }}" {{ 'selected' if data.payment_currency == c }}>{{ c }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">Число оплаты</label>
+          <input type="number" min="1" max="31" name="payment_day"
+                 class="form-control {{ 'is-invalid' if errors.payment_day }}"
+                 value="{{ data.payment_day }}" placeholder="1–31">
+          {% if errors.payment_day %}<div class="invalid-feedback">{{ errors.payment_day }}</div>{% endif %}
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn text-dark fw-semibold px-4" style="background: var(--sea);">
+          Сохранить
+        </button>
+        <a href="{{ url_for('index') }}" class="btn btn-outline-light">Отмена</a>
+        {% if errors %}
+          <span class="align-self-center text-danger small">Форма содержит ошибки — проверьте поля, отмеченные красным.</span>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  /* Автоматическая подстановка флага при выборе страны */
+  var countrySelect = document.getElementById('country-select');
+  var flagPreview = document.getElementById('flag-preview');
+  if (countrySelect && flagPreview) {
+    countrySelect.addEventListener('change', function () {
+      var opt = countrySelect.options[countrySelect.selectedIndex];
+      flagPreview.textContent = (opt && opt.dataset.flag) ? opt.dataset.flag : '🏳️';
+    });
+  }
+
+  /* Показать / скрыть пароль */
+  var toggleBtn = document.getElementById('toggle-password');
+  var passwordInput = document.getElementById('server-password');
+  if (toggleBtn && passwordInput) {
+    toggleBtn.addEventListener('click', function () {
+      passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+    });
+  }
+</script>
+{% endblock %}

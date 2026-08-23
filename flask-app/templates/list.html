@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block title %}VPN Реестр — список локаций{% endblock %}
+
+{# Ссылка-заголовок для серверной сортировки (?sort=...&order=...) #}
+{% macro sort_link(field, label) -%}
+  {%- set next_order = 'desc' if sort == field and order == 'asc' else 'asc' -%}
+  <a class="sort-link {{ 'active' if sort == field }}"
+     href="{{ url_for('index', sort=field, order=next_order) }}">
+    {{ label }}<span class="arrow">{% if sort == field %}{{ '▲' if order == 'asc' else '▼' }}{% endif %}</span>
+  </a>
+{%- endmacro %}
+
+{% block content %}
+<div class="d-flex flex-wrap align-items-end gap-3 mb-3">
+  <div>
+    <h1 class="h3 mb-1">VPN-локации</h1>
+    <div class="text-secondary small">
+      Записей: <b class="text-light">{{ rows|length }}</b>
+      · сортировка: <span class="mono">{{ sort }}</span> ({{ order }})
+    </div>
+  </div>
+  <div class="ms-auto d-flex gap-2">
+    <input id="quick-filter" type="search" class="form-control form-control-sm"
+           placeholder="Быстрый фильтр…" style="max-width: 240px;">
+    <a class="btn btn-sm text-dark fw-semibold" style="background: var(--sea);"
+       href="{{ url_for('create') }}">+ Новая локация</a>
+  </div>
+</div>
+
+{% if rows %}
+<div class="table-responsive">
+  <table class="table table-dark align-middle vpn-table mb-0">
+    <thead>
+      <tr>
+        <th>{{ sort_link('id', 'ID') }}</th>
+        <th>{{ sort_link('host_name', 'Хостер') }}</th>
+        <th>{{ sort_link('country_name', 'Страна') }}</th>
+        <th>{{ sort_link('vpn_system', 'VPN-система') }}</th>
+        <th>Домен / IP</th>
+        <th>{{ sort_link('payment_cost', 'Оплата') }} · {{ sort_link('payment_day', 'день') }}</th>
+        <th>Пароль</th>
+        <th class="text-end">Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr class="vpn-row"
+          data-search="{{ (row.host_name ~ ' ' ~ row.country_name ~ ' ' ~ row.domain ~ ' ' ~ row.ip ~ ' ' ~ row.vpn_system)|lower }}">
+        <td class="mono muted">{{ row.id }}</td>
+
+        <td>
+          <a class="host-link" href="{{ row.login_url }}" target="_blank" rel="noopener">
+            {{ row.host_name }}
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </a>
+          <div class="small text-secondary">
+            {{ row.login or '—' }}{% if row.login_method %} · вход через {{ row.login_method }}{% endif %}
+          </div>
+        </td>
+
+        <td class="text-nowrap">
+          <span class="flag">{{ row.country_flag }}</span>{{ row.country_name }}
+        </td>
+
+        <td><span class="chip c{{ loop.index0 % 4 }}">{{ row.vpn_system }}</span></td>
+
+        <td class="mono">
+          {%- if row.domain %}{{ row.domain }}{% endif -%}
+          {%- if row.domain and row.ip %}<br>{% endif -%}
+          {%- if row.ip %}<span class="text-secondary">{{ row.ip }}</span>{% endif -%}
+          {%- if not row.domain and not row.ip %}<span class="muted">—</span>{% endif -%}
+        </td>
+
+        <td>
+          {% if row.payment_cost %}
+            <span class="mono cost">{{ row.payment_cost }} {{ row.payment_currency }}</span>
+            <div class="small text-secondary">
+              {{ row.payment_period or 'разово' }}{% if row.payment_day %} · {{ row.payment_day }}-е число{% endif %}
+            </div>
+          {% else %}<span class="muted">—</span>{% endif %}
+        </td>
+
+        <td>
+          {% if row.server_password %}
+            <button type="button" class="pw-btn" data-copy="{{ row.server_password }}"
+                    title="Кликните, чтобы скопировать пароль">
+              ••••••••<span class="pw-hint">копировать</span>
+            </button>
+          {% else %}<span class="muted">—</span>{% endif %}
+        </td>
+
+        <td class="text-end text-nowrap">
+          <a class="btn btn-sm btn-outline-light" href="{{ url_for('edit', item_id=row.id) }}">Изменить</a>
+          <form class="d-inline" method="post" action="{{ url_for('delete', item_id=row.id) }}"
+                onsubmit="return confirm('Удалить локацию «{{ row.host_name }}» (ID {{ row.id }})?');">
+            <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<p class="text-secondary small mt-3">
+  Клик по паролю копирует его в буфер обмена · клик по заголовку колонки сортирует список (серверная сортировка).
+</p>
+
+{% else %}
+<div class="empty-state">
+  <div style="font-size: 2.4rem;">🗂</div>
+  <h2 class="h5 mt-2 text-light">Пока нет ни одной VPN-локации</h2>
+  <p class="mb-3">CSV-файл пуст — добавьте первую запись.</p>
+  <a class="btn text-dark fw-semibold" style="background: var(--sea);" href="{{ url_for('create') }}">+ Добавить локацию</a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+  /* Копирование пароля в буфер обмена (с фолбэком для старых браузеров) */
+  document.querySelectorAll('.pw-btn').forEach(function (btn) {
+    btn.addEventListener('click', async function () {
+      var text = btn.getAttribute('data-copy');
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (err) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+      var prev = btn.innerHTML;
+      btn.classList.add('copied');
+      btn.innerHTML = 'скопировано ✓';
+      setTimeout(function () {
+        btn.classList.remove('copied');
+        btn.innerHTML = prev;
+      }, 1300);
+    });
+  });
+
+  /* Быстрый клиентский фильтр по строкам таблицы */
+  var filterInput = document.getElementById('quick-filter');
+  if (filterInput) {
+    filterInput.addEventListener('input', function () {
+      var q = filterInput.value.trim().toLowerCase();
+      document.querySelectorAll('.vpn-row').forEach(function (tr) {
+        tr.style.display = tr.getAttribute('data-search').indexOf(q) !== -1 ? '' : 'none';
+      });
+    });
+  }
+</script>
+{% endblock %}
