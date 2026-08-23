@@ -35,6 +35,23 @@
         </div>
 
         <div class="col-md-6">
+          <label class="form-label">Пароль</label>
+          <div class="input-group">
+            <input type="password" name="login_password" id="login-password"
+                   class="form-control" value="{{ data.get('login_password', '') }}" autocomplete="new-password"
+                   placeholder="пароль от хостера">
+            <button type="button" class="btn btn-outline-secondary" id="toggle-login-password"
+                    title="Показать / скрыть пароль">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12Z"/>
+                <circle cx="12" cy="12" r="2.6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="col-md-6">
           <label class="form-label">Способ логина в хостере</label>
           <select name="login_method" class="form-select">
             <option value="" {{ 'selected' if not data.login_method }}>— не выбран —</option>
@@ -177,12 +194,21 @@
     });
   }
 
-  /* Показать / скрыть пароль */
+  /* Показать / скрыть пароль сервера */
   var toggleBtn = document.getElementById('toggle-password');
   var passwordInput = document.getElementById('server-password');
   if (toggleBtn && passwordInput) {
     toggleBtn.addEventListener('click', function () {
       passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+    });
+  }
+
+  /* Показать / скрыть пароль логина */
+  var toggleLoginBtn = document.getElementById('toggle-login-password');
+  var loginPasswordInput = document.getElementById('login-password');
+  if (toggleLoginBtn && loginPasswordInput) {
+    toggleLoginBtn.addEventListener('click', function () {
+      loginPasswordInput.type = loginPasswordInput.type === 'password' ? 'text' : 'password';
     });
   }
 </script>
