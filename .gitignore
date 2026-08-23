@@ -1,47 +1,66 @@
-```gitignore
-# Compiled and build artifacts
-*.pyc
+```
+# Python
 __pycache__/
-*.o
-*.obj
-*.exe
-*.dll
+*.py[cod]
+*$py.class
 *.so
-*.a
-*.out
-*.class
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Dependencies
-node_modules/
+# Virtual Environment
 venv/
 .venv/
-.env
-.env.local
-.env.*
+ENV/
 
-# Build outputs
+# Flask
+instance/
+.webassets-cache
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# TypeScript
+*.tsbuildinfo
 dist/
 build/
-target/
-*.log
-*.tmp
+
+# IDE
+.vscode/
+.idea/
 *.swp
 *.swo
 
-# Editors
-.vscode/
-.idea/
+# OS
+.DS_Store
+Thumbs.db
 
-# Coverage reports
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.local
+*.env.*
+
+# Coverage
 coverage/
 htmlcov/
 .coverage
-
-# Python specific
-.mypy_cache/
-.pytest_cache/
-
-# System files
-.DS_Store
-Thumbs.db
 ```

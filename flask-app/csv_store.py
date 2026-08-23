@@ -23,6 +23,7 @@ CSV_HEADERS = [
     "login_url",
     "login",
     "login_method",
+    "login_password",
     "vpn_system",
     "country_name",
     "country_flag",
