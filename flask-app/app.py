@@ -43,7 +43,7 @@ store = CsvStore(CSV_PATH)
 # --------------------------------------------------------------------- #
 # Справочники (хардкод для отладочной версии)
 # --------------------------------------------------------------------- #
-LOGIN_METHODS = ["Google", "ВКонтакте", "Телеграм"]
+LOGIN_METHODS = ["Google", "ВКонтакте", "Телеграм", "Логин пароль"]
 
 VPN_SYSTEMS = [
     "Remnawave panel",
@@ -52,6 +52,7 @@ VPN_SYSTEMS = [
     "3x-ui pro",
     "Amnezia",
     "Wireguard",
+    "Другое",
 ]
 
 PAYMENT_PERIODS = ["ежемесячно", "ежеквартально", "раз в полгода", "ежегодно"]
@@ -132,6 +133,7 @@ def parse_form(form) -> dict:
         "host_name": s("host_name"),
         "login_url": s("login_url"),
         "login": s("login"),
+        "login_password": s("login_password"),
         "login_method": s("login_method"),
         "vpn_system": s("vpn_system"),
         "country_name": s("country_name"),
