@@ -6,57 +6,320 @@ node_modules/
 dist/
 build/
 *.js.map
-*.mjs.map
+*.d.ts
 
-# Environment variables
+# Environment
 .env
 .env.local
 *.env.*
 
-# IDE specific
+# Editors
 .vscode/
 .idea/
-
-# OS generated
-.DS_Store
-Thumbs.db
 
 # Logs
 *.log
 
-# Python cache (if any Python files were present)
+# Temporary files
+*.tmp
+*.swp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+.Python
 
-# Temporary files
-*.tmp
-*.temp
-*.bak
+# Compiled binary files
+*.exe
+*.dll
+*.so
+*.dylib
 
-# Archives
+# Compressed archives
 *.zip
-*.tar
-*.gz
-*.tgz
-*.rar
-*.7z
-*.bz2
-*.xz
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
 *.tar.gz
 *.tar.bz2
 *.tar.xz
-*.tar.zst
+*.gz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
+
+# Testing
+*.pytest_cache/
+.mypy_cache/
+
+# Java/Scala
+*.class
+*.jar
+*.war
+*.ear
+target/
+
+# C/C++
+*.o
+*.a
+*.obj
+*.out
+*.dll
+*.so
+
+# Go
+*.exe
+*.test
+*.prof
+*.mod
+*.sum
+
+# Ruby
+*.gem
+*.rbc
+.bundle/
+vendor/bundle/
+
+# Rust
+Cargo.lock
+target/
+
+# PHP
+vendor/
+
+# .NET
+bin/
+obj/
+*.sln
+*.csproj
+
+# Elixir
+mix.lock
+*.ez
+ebin/
+_build/
+
+# Julia
+*.jl.cov
+*.jl.log
+.julia/
+
+# Zig
+zig-cache/
+zig-out/
+
+# Dart
+.dart_tool/
+.build/
+*.ddc.js
+*.part.js
+
+# Elm
+elm-stuff/
+*.elmo
+
+# Haskell
+dist-newstyle/
+.cabal-sandbox/
+*.o
+*.hi
+
+# Clojure
+target/
+*.jar
+
+# Puppet
+spec/fixtures/
+pkg/
+*.pp
+
+# NativeScript
+hooks/
+platforms/
+node_modules/
+
+# Web
+*.css.map
+*.js.map
+
+# Vite
+vite.config.js.map
+
+# TypeScript
+*.tsbuildinfo
+*.tsx
+
+# React
+*.jsx
+
+# Next.js
+.next/
+out/
+
+# Nuxt.js
+.nuxt/
+.output/
+
+# Vue
+.vuepress/dist
+dist/
+
+# Gatsby
+.cache/
+public/
+
+# Angular
+.angular/
+dist/
+tmp/
+
+# Svelte
+.svelte-kit/
+
+# Astro
+.dist/
+astro.config.mjs.map
+
+# Remix
+.remix/
+build/
+
+# Expo
+.expo/
+.expo-shared/
+
+# Capacitor
+capacitor.config.json
+
+# Ionic
+ionic.config.json
+
+# Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+ios/
+android/
+windows/
+linux/
+macos/
+
+# Unity
+Library/
+Temp/
+Obj/
+Build/
+Logs/
+*.unityproj
+*.sln
+*.csproj
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.cache
+*.meta
+csc.rsp
+*.pdb
+*.pidb.meta
+*.prefab
+*.a
+*.so
+*.lib
+*.bin
+*.hex
+*.ilk
+*.manifest
+*.appx
+*.appxbundle
+*.msix
+*.msixbundle
+
+# Unreal Engine
+*.uproject
+Saved/
+Binaries/
+Intermediate/
+*.Target.cs
+*.Editor.Target.cs
+*.Build.cs
+
+# Godot
+.godot/
+*.import
+*.remap
+
+# LÖVE
+*.love
+
+# GameMakerStudio
+*.yy
+*.yyp
+cache/
+data.win
+options/
+rooms/
+objects/
+scripts/
+sprites/
+sounds/
+music/
+fonts/
+timelines/
+notes/
+paths/
+configs/
+
+# Stencyl
+game/
+libs/
+*.stk
+
+# Construct 2
+export/
+*.c2project
+*.c2image
+*.c2arr
+
+# Construct 3
+*.c3p
+exportfiles/
+
+# Corona
+build/
+*.ds_store
+*.mobileprovision
+*.bat
+*.sh
+*.psd
+*.ai
+*.tga
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.ico
+
+# Images (preserved as per instructions)
+# .png
+# .jpg
+# .jpeg
+# .bmp
+# .gif
+# .webm
 
 ```
